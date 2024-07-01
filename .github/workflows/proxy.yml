@@ -1,0 +1,22 @@
+name: Trello Proxy
+
+on:
+  repository_dispatch:
+    types: [trello_webhook]
+
+jobs:
+  proxy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Forward request to Google Apps Script
+      run: |
+        curl -X POST https://script.google.com/macros/s/AKfycbykN7f1gLRGhUf03c0HjWt0If2lJUulrw8vOvXCzJhghxSOwHScwsfY0ngssBmLRKe2/exec \
+        -H "Content-Type: application/json" \
+        -d "${{ github.event.client_payload }}"
+
+    - name: Return response
+      run: echo "Request forwarded successfully"
